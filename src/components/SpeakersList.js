@@ -1,14 +1,15 @@
 import Speaker from "./Speaker";
 import ReactPlaceHolder from "react-placeholder";
-import useRequestSpeakers, {REQUEST_STATUS} from "../hooks/useRequestSpeakers";
+import useRequestDelay, { REQUEST_STATUS } from "../hooks/useRequestDelay";
+import { data } from "../../SpeakerData";
 
 function SpeakersList({ showSessions }) {
   const {
-    speakersData,
+    data: speakersData,
     requestStatus,
     error,
-    onFavoriteToggle
-  } = useRequestSpeakers(2000);
+    updateRecord,
+  } = useRequestDelay(2000, data);
 
   if (requestStatus === REQUEST_STATUS.FAILURE) {
     return (
@@ -18,7 +19,7 @@ function SpeakersList({ showSessions }) {
     );
   }
 
-  // if (isLoading === true) return <div>Loading...</div>
+  //if (isLoading === true) return <div>Loading...</div>
 
   return (
     <div className="container speakers-list">
@@ -26,9 +27,9 @@ function SpeakersList({ showSessions }) {
         type="media"
         rows={15}
         className="speakerslist-placeholder"
-        ready={requestStatus === REQUEST_STATUS.SUCCESS}>
-        <div className="row"
+        ready={requestStatus === REQUEST_STATUS.SUCCESS}
       >
+        <div className="row">
           {speakersData.map(function (speaker) {
             return (
               <Speaker
@@ -36,7 +37,10 @@ function SpeakersList({ showSessions }) {
                 speaker={speaker}
                 showSessions={showSessions}
                 onFavoriteToggle={() => {
-                  onFavoriteToggle(speaker.id);
+                  updateRecord({
+                    ...speaker,
+                    favorite: !speaker.favorite,
+                  });
                 }}
               />
             );
