@@ -31,13 +31,13 @@ function SpeakerFavorite({ favorite, onFavoriteToggle }) {
     return ( 
         <div className="action padB1">
             <span onClick={onFavoriteToggle}>
-                <i className={favorite === true ? "fa fa-star orange" :  "fa fa-star-o orange"}>Favorite</i>
+                <i className={favorite === true ? "fa fa-star orange" :  "fa fa-star-o orange"}>{"   "}Favorite</i>
             </span>
         </div>
      );
 }
 
-function SpeakerDemographics({ first, last, bio, company, twitterHandle, favorite }) {
+function SpeakerDemographics({ first, last, bio, company, twitterHandle, favorite, onFavoriteToggle }) {
     return (
         <div className="speaker-info">
             <div className="d-flex justify-content-between mb-3">
@@ -65,7 +65,7 @@ function SpeakerDemographics({ first, last, bio, company, twitterHandle, favorit
     );
 }
 
-function Speaker({ speaker, showSessions }) {
+function Speaker({ speaker, showSessions, onFavoriteToggle }) {
     const { id, first, last, sessions } = speaker;
     return (
         <div
