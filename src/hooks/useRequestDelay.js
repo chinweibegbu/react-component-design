@@ -7,19 +7,16 @@ export const REQUEST_STATUS = {
 };
 
 function useRequestDelay(delayTime = 1000, initialData = []) {
-  const [data, setData] = useState(initialData);
+  const [data, setData] = useState([]);
   const [requestStatus, setRequestStatus] = useState(REQUEST_STATUS.LOADING);
   const [error, setError] = useState("");
-
   const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
   useEffect(() => {
     async function delayFunc() {
       try {
         await delay(delayTime);
-        //throw "Had Error."
         setRequestStatus(REQUEST_STATUS.SUCCESS);
-        setData(data);
+        setData(initialData);
       } catch (e) {
         setRequestStatus(REQUEST_STATUS.FAILURE);
         setError(e);
@@ -28,7 +25,7 @@ function useRequestDelay(delayTime = 1000, initialData = []) {
     delayFunc();
   }, []);
 
-  function updateRecord(recordUpdated) {
+  function updateRecord(recordUpdated, doneCallback) {
     const newRecords = data.map(function (rec) {
       return rec.id === recordUpdated.id ? recordUpdated : rec;
     });
@@ -36,6 +33,9 @@ function useRequestDelay(delayTime = 1000, initialData = []) {
     async function delayFunction() {
       try {
         await delay(delayTime);
+        if (doneCallback) {
+          doneCallback();
+        }
         setData(newRecords);
       } catch (error) {
         console.log("error thrown inside delayFunction", error);

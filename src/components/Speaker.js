@@ -1,7 +1,7 @@
 function Session({ title, room }) {
     return (
         <span className="session w-100">
-            {title} <strong>Room: {room}</strong>
+            {title} <strong>Room: {room.name}</strong>
         </span>
     );
 }
@@ -9,7 +9,7 @@ function Session({ title, room }) {
 function Sessions({ sessions }) {
     return (
         <div className="sessionBox card h-250">
-            <Session title={sessions[0].title} room={sessions[0].room.name} />
+            <Session {...sessions[0]} />
         </div>
     );
 }
@@ -28,16 +28,39 @@ function SpeakerImage({ id, first, last }) {
 }
 
 function SpeakerFavorite({ favorite, onFavoriteToggle }) {
-    return ( 
+    function doneCallback() {
+        console.log(
+            `In SpeakerFavorite:doneCallback    ${new Date().getMilliseconds()}`
+        );
+    }
+
+    return (
         <div className="action padB1">
-            <span onClick={onFavoriteToggle}>
-                <i className={favorite === true ? "fa fa-star orange" :  "fa fa-star-o orange"}>{"   "}Favorite</i>
+            <span
+                onClick={function () {
+                    return onFavoriteToggle(doneCallback);
+                }}
+            >
+                <i
+                    className={
+                        favorite === true ? "fa fa-star orange" : "fa fa-star-o orange"
+                    }
+                />{" "}
+                Favorite{" "}
             </span>
         </div>
-     );
+    );
 }
 
-function SpeakerDemographics({ first, last, bio, company, twitterHandle, favorite, onFavoriteToggle }) {
+function SpeakerDemographics({
+    first,
+    last,
+    bio,
+    company,
+    twitterHandle,
+    favorite,
+    onFavoriteToggle,
+}) {
     return (
         <div className="speaker-info">
             <div className="d-flex justify-content-between mb-3">
@@ -45,11 +68,12 @@ function SpeakerDemographics({ first, last, bio, company, twitterHandle, favorit
                     {first} {last}
                 </h3>
             </div>
-            <SpeakerFavorite favorite={favorite} onFavoriteToggle={onFavoriteToggle} />
+            <SpeakerFavorite
+                favorite={favorite}
+                onFavoriteToggle={onFavoriteToggle}
+            />
             <div>
-                <p className="card-description">
-                    {bio}
-                </p>
+                <p className="card-description">{bio}</p>
                 <div className="social d-flex flex-row mt-4">
                     <div className="company">
                         <h5>Company</h5>
@@ -68,14 +92,12 @@ function SpeakerDemographics({ first, last, bio, company, twitterHandle, favorit
 function Speaker({ speaker, showSessions, onFavoriteToggle }) {
     const { id, first, last, sessions } = speaker;
     return (
-        <div
-            className="col-xs-12 col-sm-12 col-md-6 col-lg-4 col-sm-12 col-xs-12"
-        >
+        <div className="col-xs-12 col-sm-12 col-md-6 col-lg-4 col-sm-12 col-xs-12">
             <div className="card card-height p-4 mt-4">
                 <SpeakerImage id={id} first={first} last={last} />
                 <SpeakerDemographics {...speaker} onFavoriteToggle={onFavoriteToggle} />
             </div>
-            { showSessions ? <Sessions sessions={sessions} /> : null }
+            {showSessions === true ? <Sessions sessions={sessions} /> : null}
         </div>
     );
 }
